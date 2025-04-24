@@ -1,4 +1,6 @@
+import { v4 as uuidv4 } from "uuid";
 import { useState } from "react";
+import "./Form.css";
 
 export default function Form({ setTasks }) {
   const [task, setTask] = useState("");
@@ -7,7 +9,10 @@ export default function Form({ setTasks }) {
     eve.preventDefault();
     if (task.trim() === "") alert("Please enter a task!");
     else {
-      setTasks((prevTasks) => [...prevTasks, task]);
+      setTasks((prevTasks) => [
+        ...prevTasks,
+        { task: task, id: uuidv4(), done: false },
+      ]);
       setTask("");
     }
   }

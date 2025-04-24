@@ -1,32 +1,51 @@
+import "./TaskList.css";
+
 export default function TaskList({ tasks, setTasks }) {
-  function handleDelete(eve) {
-    const taskToDelete = eve.target.parentElement.innerText.split(" ")[0];
-
-    setTasks((prevTasks) => prevTasks.filter((task) => task !== taskToDelete));
+  function handleDelete(id) {
+    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
   }
 
-  function handleEdit(eve) {
-    const taskToEdit = eve.target.parentElement.innerText.split(" ")[0];
-    const newTask = prompt("Edit your task", taskToEdit);
-    if (newTask) {
-      setTasks((prevTasks) =>
-        prevTasks.map((task) => (task === taskToEdit ? newTask : task))
-      );
-    }
+  function handleDone(id) {
+    setTasks((prevTasks) => {
+      return prevTasks.map((task) => {
+        if (task.id === id) {
+          return { ...task, done: !task.done };
+        }
+        return task;
+      });
+    });
   }
+
+  const styles = { textDecoration: "line-through" };
   return (
     <div>
-      <h2>Task List</h2>
+      {tasks.length > 0 ? <h2>Task List</h2> : <></>}
+
       <ul>
         {tasks.length ? (
-          tasks.map((task, index) => (
-            <li key={index}>
-              {task} <button onClick={handleEdit}>Edit</button>
-              <button onClick={handleDelete}>Delete</button>
+          tasks.map((task) => (
+            <li key={task.id}>
+              <span style={task.done ? styles : {}}>{task.task}</span>
+              &nbsp;&nbsp;&nbsp;
+              <button
+                onClick={() => {
+                  handleDelete(task.id);
+                }}
+              >
+                Delete
+              </button>
+              &nbsp;&nbsp;&nbsp;
+              <button
+                onClick={() => {
+                  handleDone(task.id);
+                }}
+              >
+                Done
+              </button>
             </li>
           ))
         ) : (
-          <p></p>
+          <></>
         )}
       </ul>
     </div>
